@@ -1,10 +1,25 @@
 package startDict;
 
+import java.io.RandomAccessFile;
+
 /**
- *
+ * http://strongexperts.narod.ru/ru/articles/archive/java2/2006/may2006-001/may2006-001.htm
+ * http://strongexperts.narod.ru/ru/articles/archive/java2/2007/feb2007-001/feb2007-001.htm
+ * http://habrahabr.ru/post/108076/
+ * http://khpi-iip.mipk.kharkiv.edu/library/extent/prog/inter/string.html
  * @author RT
  */
 public class StartDict extends BaseStarDictItem {
+    
+    private static final String EXTENSION = "dict";
+    private static final String MODE = "rw";
+    
+     /**
+      * Маркер, определяющий форматирование словарной статьи
+      */
+    private String sameTypeSequence = null;
+    
+    private RandomAccessFile raf = null;
 
     // Маркер может быть составным (к примеру, sametypesequence = tm).
     // Виды одно-символьныx идентификаторов  словарных статей (для всех строчных идентификаторов текст в формате utf-8, заканчивается '\0'):
@@ -24,50 +39,35 @@ public class StartDict extends BaseStarDictItem {
     // 'X' - этот тип зарезервирован для экспериментальных расширений
     
 
-    public StartDict(String pathToDict, String exp) throws Exception {
-        super(pathToDict, exp);
+    public StartDict(String pathToDict, String sameTypeSequence) throws Exception {
+        super(pathToDict, EXTENSION);
+        this.sameTypeSequence = sameTypeSequence;
+        System.out.println(pathToFile);
+        raf = new RandomAccessFile(pathToFile, MODE);
     }
     
-    /*
+    public String getTranslation(int wordDataOffset, int wordDataSize) throws Exception {
+        checkValidArguments(wordDataOffset, wordDataSize);
+        byte[] byteArray = new byte[wordDataSize+10];
+        // Читаем часть файла, относящегося к переводу слова
+        raf.seek(wordDataOffset);
+        raf.read(byteArray, wordDataOffset, wordDataSize);
+        // Вернем раскодированный в юникодную строку набор байтoв 
+        // (self.encoding определен в базовом классе BaseDictionaryItem)
+        return new String(byteArray, "UTF-8");
+    }
+            
+    private boolean checkValidArguments(int wordDataOffset, int wordDataSize) throws Exception {
+        int endDataSize = wordDataOffset + wordDataSize;
+        int realFileSize = 10000;
+        if((wordDataOffset < 0) || (wordDataSize < 0) || (endDataSize > realFileSize)) {
+            throw new Exception();
+        }
+        return true;
+    }
     
-    
-    
-    def __init__(self, pathToDict, sameTypeSequence):
-
-		# Конструктор родителя (BaseStarDictItem)
-		BaseStarDictItem.__init__(self, pathToDict, 'dict')
-	
-		# Маркер, определяющий форматирование словарной статьи
-		self.sameTypeSequence = sameTypeSequence 
-		
-
-			
-	def	GetTranslation(self, wordDataOffset, wordDataSize):
-		try:
-			# Убеждаемся что смещение и размер данных неотрицательны и находятся в пределах размера файла .dict
-			self.__CheckValidArguments(wordDataOffset, wordDataSize)
-
-			# Открываем файл .dict как бинарный
-			with open(self.dictionaryFile, 'rb') as file:   # менеджер контекста
-				file.seek(wordDataOffset) 					# Смешаемся внутри файла до начала текста, относящегося к переводу слова
-				byteArray = file.read(wordDataSize) 		# Читаем часть файла, относящегося к переводу слова
-				return byteArray.decode(self.encoding)		# Вернем раскодированный в юникодную строку набор байтoв (self.encoding определен в базовом классе BaseDictionaryItem)
-	
-		except Exception:
-			return None	
-
-	
-	
-
-	def	__CheckValidArguments(self, wordDataOffset, wordDataSize):	
-		if wordDataOffset is None:
-			pass
-		if wordDataOffset < 0:
-			pass
-		endDataSize = wordDataOffset + wordDataSize
-		if wordDataOffset < 0 or wordDataSize < 0 or endDataSize > self.realFileSize:
-			raise Exception
-	
-    
-    */
+    public static void main(String[] args) throws Exception {
+        StartDict sd = new StartDict("./stardict", "");
+        System.out.println(sd.getTranslation(100, 50));
+    }
 }
