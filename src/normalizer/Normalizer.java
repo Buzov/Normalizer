@@ -55,6 +55,8 @@ public class Normalizer {
         System.out.println(pathToStarDict);
         System.out.println(pathToResult);
         System.out.println(countWord);
+        
+        //Test
 
     }
     
