@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * This Class is used for reading .idx file.
@@ -19,7 +20,7 @@ public class IdxFile {
     /**
      * {'иностр.слово': [Смещение_до_записи_в_файле_dict, Размер_всей_записи_в_файле_dict], ...}
      */
-    private Map<String, Pos> idxDict = new HashMap<>();
+    private Map<String, Pos> idxDict = new TreeMap<>();
     /** constant of 0x000000FF. */
     private final int byteFirst = 0x000000FF;
 

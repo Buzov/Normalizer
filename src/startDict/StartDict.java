@@ -78,7 +78,12 @@ public class StartDict extends BaseStarDictItem {
         // seaborne pos = 27420839 size = 436
         
         // country mile pos = 6647566 size = 162
+        
+        // are 1629095 size = 107
+        // pos = 36500300 size = 49
+        
+        // pos = 7145555 size = 70
         StartDict sd = new StartDict("./stardict", "");
-        System.out.println(sd.getTranslation(6647566, 162));
+        System.out.println(sd.getTranslation(7145555, 70));
     }
 }
