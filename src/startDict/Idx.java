@@ -1,5 +1,9 @@
 package startDict;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author RT
@@ -7,14 +11,56 @@ package startDict;
 public class Idx extends BaseStarDictItem{
     
     private static final String EXTENSION = "idx";
+    
+    private Ifo ifo = null;
+    private File file = null;
+    /**
+     * {'иностр.слово': [Смещение_до_записи_в_файле_dict, Размер_всей_записи_в_файле_dict], ...}
+     */
+    private Map<String, Pos> idxDict = new HashMap<>();
+    /**
+     * Размер файла .idx, записанный в .ifo файле
+     */
+    private long idxFileSize = 0;
+    /**
+     * реальное количество записей в файле .idx
+     */
+    private long realWordCount = 0;
 
     public Idx(String pathToDict) throws Exception {
         super(pathToDict, EXTENSION);
+        ifo = new Ifo(pathToDict);
+        file = new File(pathToFile);
+        idxFileSize = file.length();
+    }
+    
+    /**
+     * Функция сверяет размер файла, записанный в .ifo файле, с ее реальным 
+     * размером и в случае расхождений генерирует исключение
+     */
+    private void checkRealFileSize() {
+
+        if(realFileSize != ifo.getIdxFileSize()) {
+            //raise Exception('size of the "%s" is incorrect' %self.dictionaryFile)
+        }
+            
+    }
+    
+    /**
+     * Функция сверяет количестве слов, записанное в .ifo файле, с реальным 
+     * количеством записей в файле .idx и в случае расхождений генерирует 
+     * исключение
+     */
+    private void checkRealWordCount() {
+
+        if(realWordCount != ifo.getWordCount()) {
+            //raise Exception('word count of the "%s" is incorrect' %self.dictionaryFile)
+        }
     }
     
     /*
-            self.idxDict ={} # Словарь, self.idxDict = {'иностр.слово': [Смещение_до_записи_в_файле_dict, Размер_всей_записи_в_файле_dict], ...}	
-        self.idxFileSize = int(idxFileSize) # Размер файла .idx, записанный в .ifo файле
+        
+
         self.idxOffsetBytes = int(idxOffsetBits/8) # Размер числа, содержащего внутри себя смещение до записи в файле .dict. Переводим в байты и приводим к числу
         self.wordCount = int(wordCount) # Количество слов в ".idx" файле
         
@@ -28,17 +74,9 @@ public class Idx extends BaseStarDictItem{
         self.__CheckRealWordCount()
     
     
-    # Функция сверяет размер файла, записанный в .ifo файле, с ее реальным размером и в случае расхождений генерирует исключение	
-    def __CheckRealFileSize(self):
-        if self.realFileSize != self.idxFileSize:
-            raise Exception('size of the "%s" is incorrect' %self.dictionaryFile)
 
-            
-    # Функция сверяет количестве слов, записанное в .ifo файле, с реальным количеством записей в файле .idx и в случае расхождений генерирует исключение			
-    def __CheckRealWordCount(self):
-        realWordCount = len(self.idxDict)
-        if realWordCount != self.wordCount:
-            raise Exception('word count of the "%s" is incorrect' %self.dictionaryFile)
+
+
     
 
     # Функция считывает из потока данных массив байтов заданной длины, затем преобазует байткод в число	

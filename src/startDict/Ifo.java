@@ -1,7 +1,6 @@
 package startDict;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -30,19 +29,19 @@ public class Ifo extends BaseStarDictItem{
     /**
      * Количество слов в ".idx" файле [Обязательное поле]
      */
-    private int wordCount = 0;
+    private long wordCount = 0;
     
     /**
      * Количество слов в ".syn" файле синонимов [Обязательное поле, если есть 
      * файл ".syn"]
      */
-    private int synWordCount = 0;
+    private long synWordCount = 0;
 
     /**
      * Размер (в байтах) ".idx" файла. Если файл сжат архиватором, то здесь 
      * указывается размер исходного несжатого файла [Обязательное поле]
      */
-    private int idxFileSize = 0;
+    private long idxFileSize = 0;
             
 
     public Ifo(String pathToDict) throws Exception {
@@ -66,14 +65,6 @@ public class Ifo extends BaseStarDictItem{
         //System.out.println(props.getProperty("bookname"));
     }
     
-    public static void main(String[] args) throws Exception {
-        Ifo ifo = new Ifo("./stardict");
-        System.out.println(ifo.bookName);
-        System.out.println(ifo.wordCount);
-        System.out.println(ifo.synWordCount);
-        System.out.println(ifo.idxFileSize);
-    }
-    
     private Integer getInt(String s) {
         String temp = getString(s);
         if(temp != null) {
@@ -84,6 +75,44 @@ public class Ifo extends BaseStarDictItem{
     
     private String getString(String s) {
         return props.getProperty(s);
+    }
+    
+    
+            
+    public static void main(String[] args) throws Exception {
+        Ifo ifo = new Ifo("./stardict");
+        System.out.println(ifo.getBookName());
+        System.out.println(ifo.getWordCount());
+        System.out.println(ifo.getSynWordCount());
+        System.out.println(ifo.getIdxFileSize());
+    }
+    
+    /**
+     * @return the bookName
+     */
+    public String getBookName() {
+        return bookName;
+    }
+
+    /**
+     * @return the wordCount
+     */
+    public long getWordCount() {
+        return wordCount;
+    }
+
+    /**
+     * @return the synWordCount
+     */
+    public long getSynWordCount() {
+        return synWordCount;
+    }
+
+    /**
+     * @return the idxFileSize
+     */
+    public long getIdxFileSize() {
+        return idxFileSize;
     }
      
     /*
@@ -110,5 +139,7 @@ public class Ifo extends BaseStarDictItem{
                 return defaultValue
             raise Exception('\n"%s" has invalid format (missing parameter: "%s")' % (self.dictionaryFile, key))	
     */
+
+    
     
 }

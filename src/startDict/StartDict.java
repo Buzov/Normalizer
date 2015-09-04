@@ -7,6 +7,9 @@ import java.io.RandomAccessFile;
  * http://strongexperts.narod.ru/ru/articles/archive/java2/2007/feb2007-001/feb2007-001.htm
  * http://habrahabr.ru/post/108076/
  * http://khpi-iip.mipk.kharkiv.edu/library/extent/prog/inter/string.html
+ * 
+ * http://devcolibri.com/2989
+ * http://www.stardict.org/otherprojects.php
  * @author RT
  */
 public class StartDict extends BaseStarDictItem {
@@ -48,12 +51,17 @@ public class StartDict extends BaseStarDictItem {
     
     public String getTranslation(int wordDataOffset, int wordDataSize) throws Exception {
         checkValidArguments(wordDataOffset, wordDataSize);
-        byte[] byteArray = new byte[wordDataSize+10];
+        byte[] byteArray = new byte[wordDataSize];
         // Читаем часть файла, относящегося к переводу слова
+        // Смещаемся в нужно место файла
         raf.seek(wordDataOffset);
-        raf.read(byteArray, wordDataOffset, wordDataSize);
+        // читаем n байт в созданный массив с указанной позиции 
+        raf.read(byteArray, 0, wordDataSize);
+               
+        for(byte b : byteArray) {
+            System.out.println(b);
+        }
         // Вернем раскодированный в юникодную строку набор байтoв 
-        // (self.encoding определен в базовом классе BaseDictionaryItem)
         return new String(byteArray, "UTF-8");
     }
             
@@ -61,13 +69,16 @@ public class StartDict extends BaseStarDictItem {
         int endDataSize = wordDataOffset + wordDataSize;
         int realFileSize = 10000;
         if((wordDataOffset < 0) || (wordDataSize < 0) || (endDataSize > realFileSize)) {
-            throw new Exception();
+            //throw new Exception();
         }
         return true;
     }
     
     public static void main(String[] args) throws Exception {
+        // seaborne pos = 27420839 size = 436
+        
+        // country mile pos = 6647566 size = 162
         StartDict sd = new StartDict("./stardict", "");
-        System.out.println(sd.getTranslation(100, 50));
+        System.out.println(sd.getTranslation(6647566, 162));
     }
 }
