@@ -62,7 +62,7 @@ public class StartDict extends BaseStarDictItem {
             System.out.println(b);
         }
         // Вернем раскодированный в юникодную строку набор байтoв 
-        return new String(byteArray, "UTF-8");
+        return new String(byteArray, "utf-8");
     }
             
     private boolean checkValidArguments(int wordDataOffset, int wordDataSize) throws Exception {

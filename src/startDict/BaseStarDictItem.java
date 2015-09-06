@@ -43,7 +43,7 @@ public class BaseStarDictItem {
             if(f.isDirectory()) {
                 for(String fileName : f.list()) {
                     if(fileName.endsWith(String.format(EXP, exp))) {
-                        return f.getPath()+ "\\" + fileName;
+                        return f.getPath()+ "/" + fileName;
                     }
                 }
             } else {
