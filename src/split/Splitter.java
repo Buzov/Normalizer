@@ -8,7 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -26,7 +33,7 @@ public class Splitter {
     /**
      * Расширение файла
      */
-    private static final String EXP = ".txt";
+    private static final String EXP = ".srt";
     /**
      * Шаблон
      */
@@ -58,9 +65,32 @@ public class Splitter {
         } catch (IOException ex) {
             Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ComparatorByValue cmp = new ComparatorByValue();
+        Map<String, Integer> map = new HashMap<>();
         for(String s : listWords) {
-            System.out.println(s);
+            //System.out.println(s);
+            if(map.containsKey(s)) {
+                map.put(s, map.get(s)+1);
+            } else {
+                map.put(s, 1);
+            }
         }
+        Set<Entry<String, Integer>> set = map.entrySet();
+        List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(set);
+        Collections.sort( list, new Comparator<Map.Entry<String, Integer>>()
+        {
+            public int compare( Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2 )
+            {
+                return (o2.getValue()).compareTo( o1.getValue() );
+            }
+        } );
+        for(Map.Entry<String, Integer> entry:list){
+            System.out.println(entry.getKey()+" ==== "+entry.getValue());
+        }
+        /*for(Entry e : map.entrySet()) {
+            System.out.println("word = " + e.getKey() + " count = " + e.getValue());
+        }*/
+        System.out.println("size = " + listWords.size());
         return true;
     }
     
@@ -88,7 +118,7 @@ public class Splitter {
             while ((line = br.readLine()) != null) {
                 m = p.matcher(line);
                 while (m.find()) {
-                    list.add(m.group());
+                    list.add(m.group().toLowerCase());
                 }
             }
             br.close();
@@ -97,7 +127,20 @@ public class Splitter {
     }
     
     public static void main(String[] args) {
-        new Splitter().initialize("./books/");
+        // ./books/
+        new Splitter().initialize("D:\\download\\Hellboy.Dilogy.(2004-2008).BDRip.720p.(DVD5).[NoLimits-Team]");
     }
     
+}
+
+class ComparatorByValue implements Comparator<Map.Entry<String,Integer>> {
+    public int compare(Map.Entry<String,Integer> e1, Map.Entry<String,Integer> e2) {
+        if (e1.getValue() < e2.getValue()){
+            return 1;
+        } else if (e1.getValue() == e2.getValue()) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 }

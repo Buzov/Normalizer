@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,95 +20,13 @@ import split.Splitter;
  *
  * @author RT
  */
-public class BaseWordNetItem {
+public abstract class BaseWordNetItem {
     
-    /**
-     * Переменная с кодировкой
-     */
-    protected static final String ENCODING = "utf-8";
-    /**
-     * Расширение файла
-     */
-    private static final String EXP = ".txt";
-    /**
-     * Шаблон
-     */
-    private static final String REGEX = "((?:[a-zA-Z]+[-']?)*[a-zA-Z]+)";
+    protected static Map<String, String> mapCash = new HashMap<>();
+    protected static Map<String, String> mapDict = new HashMap<>();
+    protected Map<String, String> mapEx = new HashMap<>();
     
-    private String pathToWordNetDict = null;
-    
-    private File directory = null;
-    
-    private Map<String, String> wordNetExcDict = new TreeMap<>();
-    
-    public BaseWordNetItem(String pathToWordNetDict) {
-        this.pathToWordNetDict = pathToWordNetDict;
-    }
-    
-    public boolean initialize(String pathToBooks) {
-        return initialize(pathToBooks, ENCODING);
-    }
-    
-    public boolean initialize(String pathToBooks, String encoding) {
-        
-        directory = new File(pathToBooks);
-        if(!directory.exists() || !directory.isDirectory()) {
-            return false;
-        }
-        listPathToBooks = getListPathToBooks();
-        if(listPathToBooks == null || listPathToBooks.isEmpty()) {
-            return false;
-        }
-        try {
-            listWords = splitt();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for(String s : listWords) {
-            System.out.println(s);
-        }
-        return true;
-    }
-    
-    private List<String> getListPathToBooks() {
-        List<String> list = new ArrayList<>();
-        for(File file : directory.listFiles()) {
-            if(file.isFile()) {
-                String path = file.getPath();
-                if(path.endsWith(EXP)) {
-                    list.add(path);
-                }
-            }
-        }
-        return list;
-    }
-    
-    private List<String> splitt() throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        List<String> list = new ArrayList<>();              
-        for(String path : listPathToBooks) {
-            BufferedReader br = new BufferedReader (
-                new InputStreamReader(
-                        new FileInputStream(new File(path)), ENCODING)
-            );
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                m = p.matcher(line);
-                while (m.find()) {
-                    list.add(m.group());
-                }
-            }
-            br.close();
-        }
-        return list;
-    }
-    
-    public static void main(String[] args) {
-        new Splitter().initialize("./books/");
-    }
-    /*
-    # Конструктор
+    /*# Конструктор
     def __init__(self, pathWordNetDict, excFile, indexFile):
     
         self.rule=() # Правила замены окончаний при нормализации слова по правилам.
@@ -168,7 +87,35 @@ public class BaseWordNetItem {
             return True
         return False		
     
+    */
     
+    protected abstract Map<String, String> getMapRule();
+    
+    
+    public String getLemma(String word) {
+        String s = word.toLowerCase();
+        // Пустое слово возвращаем обратно
+        if(s == null) {
+            return s;
+        }
+        
+        // Пройдемся по кэшу, возможно слово уже нормализовывалось раньше 
+        // и результат сохранился в кэше
+        if(mapCash.containsKey(s)) {
+            mapCash.get(s);
+        }
+        
+        // Пройдемся по исключениям, если слово из исключений, вернем его 
+        // нормализованную форму
+        if(mapEx.containsKey(s)) {
+            return mapEx.get(s);
+        }
+        
+        return null;
+    }
+    
+    
+    /*
     
     # Метод возвращает лемму(нормализованную форму слова)			
     def GetLemma(self, word):
@@ -203,7 +150,29 @@ public class BaseWordNetItem {
 
         return None	
         
-        
+    */
+    
+    /**
+     * На этом шаге понимаем, что слово не является исключением и оно не 
+     * нормализовано, значит начинаем нормализовывать его по правилам.
+     * @param word Слово для нормализации
+     * @return 
+     */
+    public String ruleNormalization(String word) {
+        Map<String, String> mapRule = getMapRule();
+        for(Map.Entry<String, String> e : mapRule.entrySet()) {
+            if(word.endsWith(e.getKey())) {
+                int pos = word.lastIndexOf(e.getKey());
+                String lemma = word.substring(0, pos);
+                System.out.println("lemma = " + lemma);
+                break;
+            }
+        }
+        return null;
+    }
+    
+    /*
+    
         
     # Нормализация слова по правилам (согласно грамматическим правилам, слово приводится к нормальной форме)
     def _RuleNormalization(self, word):
@@ -216,11 +185,6 @@ public class BaseWordNetItem {
                 lemma += replGroup[1] # Приклеиваем новое окончание
                 if self._IsDefined(lemma): # Проверим, что получившееся новое слово имеет право на существование, и если это так, то вернем его
                     return lemma	
-        return None
-    */
-    
-    String getLemma(String word) {
-        return null;
-    }
+        return None*/
     
 }
