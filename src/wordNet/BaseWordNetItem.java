@@ -94,6 +94,7 @@ public abstract class BaseWordNetItem {
     
     public String getLemma(String word) {
         String s = word.toLowerCase();
+        String lemma = null;
         // Пустое слово возвращаем обратно
         if(s == null) {
             return s;
@@ -111,7 +112,15 @@ public abstract class BaseWordNetItem {
             return mapEx.get(s);
         }
         
-        return null;
+        
+        // На этом шаге понимаем, что слово не является исключением и оно не 
+        // нормализовано, значит начинаем нормализовывать его по правилам.
+        lemma = ruleNormalization(s);
+        if(lemma != null) {
+            mapCash.put(s, lemma);
+        }
+        
+        return lemma;
     }
     
     
