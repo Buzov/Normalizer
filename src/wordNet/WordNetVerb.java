@@ -1,36 +1,48 @@
 package wordNet;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *
+ * Класс для нормализации глаголов
+ * Класс наследуется от BaseWordNetItem
  * @author RT
  */
 public class WordNetVerb extends BaseWordNetItem {
+    
+    /**
+     * Правила замены окончаний при нормализации слова по правилам. 
+     * К примеру, окончание "s" заменяется на "" , "ies" на и "y" тд.
+     */
+    private static final Map<String, String> mapRule = new HashMap<>();
+    static {
+        mapRule.put("s", "");
+        mapRule.put("ies" , "y");
+        mapRule.put("es", "e");
+        mapRule.put("es", "");
+        mapRule.put("ed", "e");
+        mapRule.put("ed", "");
+        mapRule.put("ing", "e");
+        mapRule.put("ing", "");	
+    }
+    private static final String EXC = "verb.exc";
+    private static final String INDEX = "index.verb";
 
-    public WordNetVerb(String pathToWordNetDict) {
-        super(pathToWordNetDict);
+    @Override
+    protected Map<String, String> getMapRule() {
+        return mapRule;
     }
     
-    /*# Класс для нормализации глаголов
-    # Класс наследуется от BaseWordNetItem
+    @Override
+    protected String getExc() {
+        return EXC;
+    }
 
-    class WordNetVerb(BaseWordNetItem):
-    def __init__(self, pathToWordNetDict):
-    
-        # Конструктор родителя (BaseWordNetItem)
-        BaseWordNetItem.__init__(self, pathToWordNetDict, 'verb.exc', 'index.verb')
-
-
-        # Правила замены окончаний при нормализации слова по правилам. К примеру, окончание "s" заменяется на "" , "ies" на и "y" тд.
-        self.rule = (	
-                        ["s"   , ""  ],
-                        ["ies" , "y" ],
-                        ["es"  , "e" ], 			
-                        ["es"  , ""  ],	
-                        ["ed"  , "e" ], 			
-                        ["ed"  , ""  ],	
-                        ["ing" , "e" ], 			
-                        ["ing" , ""  ]	
-                    )
-
-        # Метод получения нормализованной формы слова GetLemma(word) определен в базовом классе BaseWordNetItem*/
+    @Override
+    protected String getIndex() {
+        return INDEX;
+    }
+        
+    // Метод получения нормализованной формы слова GetLemma(word) 
+    // определен в базовом классе BaseWordNetItem
 }

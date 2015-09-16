@@ -14,33 +14,131 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import split.Splitter;
+import static wordNet.Test.m;
 
 /**
  *
  * @author RT
  */
 public abstract class BaseWordNetItem {
-    
+    /**
+     * Шаблон
+     */
+    private static final String REGEX = "[0-9]{8}";
+    private static final Pattern p = Pattern.compile(REGEX);
+    private Matcher m = null; 
+    /**
+     * Переменная с кодировкой
+     */
+    protected static final String ENCODING = "utf-8";
+    /**
+     * Словарь-кеш
+     * Немного оптимизации. Кэш для уже нормализованных слов, 
+     * ключ - ненормализованное слово, значение - нормализованное слово
+     */
     protected static Map<String, String> mapCash = new HashMap<>();
-    protected static Map<String, String> mapDict = new HashMap<>();
+    /**
+     * Индексный массив	
+     */
+    protected Map<String, ArrayList<String>> mapDict = new HashMap<>();
+    /**
+     * Словарь исключений
+     */
     protected Map<String, String> mapEx = new HashMap<>();
+    
+    private String pathToWordNetDict = null;
+    private File fileEx = null;
+    private File fileIndex = null;
+    
+    public boolean initialize(String pathToWordNetDict) {
+        this.pathToWordNetDict = pathToWordNetDict;
+        fileEx = new File(this.pathToWordNetDict + getExc());
+        fileIndex = new File(this.pathToWordNetDict + getIndex());
+        if(!fileEx.exists() || !fileIndex.exists()) {
+            return false;
+        }
+        if(fileEx.isDirectory() || fileIndex.isDirectory()) {
+            return false;
+        }
+        try {
+            appendExcDict(fileEx); // Заполним словарь исключений
+            appendIndexDict(fileIndex); // Заполним индексный массив 
+        } catch(Exception e) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void appendExcDict(File file) throws IOException {
+        // При разборе строки из файла, каждую строку разделяем на 2 слова и 
+        // заносим слова в словарь(первое слово - ключ, второе - значение). 
+        // При этом не забываем убрать с концов пробелы
+        parseFile(file, mapEx, new Parser() {
+                @Override
+                public void parse(String s, Map map) {
+                    String[] mas = s.split(" ");
+                    if(mas.length >= 2) {
+                        map.put(mas[0].replaceAll("_", " ").trim(), 
+                                mas[1].replaceAll("_", " ").trim());
+                    }
+                }
+        });
+    }
+    
+    private void appendIndexDict(File file) throws IOException {
+        // При разборе строки из файла, каждую строку разделяем на 2 слова и 
+        // заносим слова в словарь(первое слово - ключ, второе - значение). 
+        // При этом не забываем убрать с концов пробелы
+        parseFile(file, mapDict, new Parser() {
+                @Override
+                public void parse(String s, Map map) {
+                    String[] mas = s.split(" ");
+                    
+                    if(mas.length >= 8) {
+                        ArrayList<String> arr = new ArrayList<>();
+                        for(String str : mas) {
+                            m = p.matcher(str);
+                            if(m.matches()) {
+                                arr.add(str);
+                            }
+                        }
+                        map.put(mas[0].replaceAll("_", " ").trim(), 
+                                arr);
+                    }
+                }
+        });
+    }
+    
+    private void parseFile(File file, Map map, Parser parser) throws FileNotFoundException, IOException {
+        try (FileInputStream fis = new FileInputStream(file); 
+             InputStreamReader is = new InputStreamReader(fis);   
+             BufferedReader br = new BufferedReader(is)) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                parser.parse(line, map);
+            }
+        }
+    }
     
     /*# Конструктор
     def __init__(self, pathWordNetDict, excFile, indexFile):
     
         self.rule=() # Правила замены окончаний при нормализации слова по правилам.
         
-        self.wordNetExcDict={}  # Словарь исключений
-        self.wordNetIndexDict=[] # Индексный массив	
+        self.wordNetExcDict={}  # 
+        self.wordNetIndexDict=[] # 
         
         self.excFile = os.path.join(pathWordNetDict, excFile) # Получим путь до файла исключений	
         self.indexFile = os.path.join(pathWordNetDict, indexFile) # Получим путь до индексного словаря
         
-        self.__ParseFile(self.excFile, self.__AppendExcDict) # Заполним словарь исключений
-        self.__ParseFile(self.indexFile, self.__AppendIndexDict) # Заполним индексный массив 
+        self.__ParseFile(self.excFile, self.__AppendExcDict) # 
+        self.__ParseFile(self.indexFile, self.__AppendIndexDict) # 
 
-        self.cacheWords={} # Немного оптимизации. Кэш для уже нормализованных слов, ключ - ненормализованное слово, значение - нормализованное слово	
+        self.cacheWords={} # 	
         
             
             
@@ -78,18 +176,28 @@ public abstract class BaseWordNetItem {
         except KeyError:
             return None
         
+       */ 
         
-        
-    # Метод проверяет слово на существование, и возвращает либо True, либо False.
-    # Для того, чтобы понять, существует ли слово, проверяется индексный массив(там хранится весь список слов данной части речи).	
-    def _IsDefined(self, word):
-        if word in self.wordNetIndexDict:
-            return True
-        return False		
-    
-    */
+    /**
+     * Метод проверяет слово на существование, и возвращает либо True, 
+     * либо False.
+     * Для того, чтобы понять, существует ли слово, проверяется индексный 
+     * массив(там хранится весь список слов данной части речи).	
+     * @param word Слово для проверки
+     * @return 
+     */
+    protected boolean isDefined(String word){
+        if(mapDict.containsKey(word)) {
+            return true;
+        }
+        return false;
+    }
     
     protected abstract Map<String, String> getMapRule();
+    
+    protected abstract String getExc();
+    
+    protected abstract String getIndex();
     
     
     public String getLemma(String word) {
@@ -112,7 +220,11 @@ public abstract class BaseWordNetItem {
             return mapEx.get(s);
         }
         
-        
+        // Проверим, если слово уже в нормализованном виде, вернем его же
+        if(isDefined(s)) {
+            return s;
+        }
+
         // На этом шаге понимаем, что слово не является исключением и оно не 
         // нормализовано, значит начинаем нормализовывать его по правилам.
         lemma = ruleNormalization(s);
@@ -123,77 +235,28 @@ public abstract class BaseWordNetItem {
         return lemma;
     }
     
-    
-    /*
-    
-    # Метод возвращает лемму(нормализованную форму слова)			
-    def GetLemma(self, word):
-    
-        word = word.strip().lower() 
-    
-        # Пустое слово возвращаем обратно
-        if word == None:
-            return None	
-
-        # Пройдемся по кэшу, возможно слово уже нормализовывалось раньше и результат сохранился в кэше
-        lemma = self._GetDictValue(self.cacheWords, word)
-        if lemma != None:
-            return lemma
-            
-        # Проверим, если слово уже в нормализованном виде, вернем его же
-        if self._IsDefined(word):
-            return word
-            
-            
-        # Пройдемся по исключениям, если слово из исключений, вернем его нормализованную форму
-        lemma = self._GetDictValue(self.wordNetExcDict, word)
-        if lemma != None:
-            return lemma
-    
-            
-        # На этом шаге понимаем, что слово не является исключением и оно не нормализовано, значит начинаем нормализовывать его по правилам. 
-        lemma = self._RuleNormalization(word)
-        if lemma != None:
-            self.cacheWords[word] = lemma # Предварительно добавим нормализованное слово в кэш
-            return lemma		
-
-        return None	
-        
-    */
-    
     /**
-     * На этом шаге понимаем, что слово не является исключением и оно не 
-     * нормализовано, значит начинаем нормализовывать его по правилам.
+     * Нормализация слова по правилам (согласно грамматическим правилам, 
+     * слово приводится к нормальной форме)
      * @param word Слово для нормализации
      * @return 
      */
     public String ruleNormalization(String word) {
         Map<String, String> mapRule = getMapRule();
+        // Бежим по всем правилам, смотрим совпадает ли окончание слова с 
+        // каким либо правилом, если совпадает, то заменяем окончние.
         for(Map.Entry<String, String> e : mapRule.entrySet()) {
             if(word.endsWith(e.getKey())) {
                 int pos = word.lastIndexOf(e.getKey());
-                String lemma = word.substring(0, pos);
-                System.out.println("lemma = " + lemma);
-                break;
+                String lemma = word.substring(0, pos); // Отрезаем старое окончание
+                lemma = lemma + e.getValue(); // Приклеиваем новое окончание
+                //System.out.println("lemma = " + lemma);
+                if(isDefined(lemma)) {
+                    return lemma;
+                }
             }
         }
         return null;
     }
-    
-    /*
-    
-        
-    # Нормализация слова по правилам (согласно грамматическим правилам, слово приводится к нормальной форме)
-    def _RuleNormalization(self, word):
-        # Бежим по всем правилам, смотрим совпадает ли окончание слова с каким либо правилом, если совпадает, то заменяем окончние.	
-        for replGroup in self.rule:
-            endWord = replGroup[0]			
-            if word.endswith(endWord): 	
-                lemma = word # Копируем во временную переменную
-                lemma = lemma.rstrip(endWord) # Отрезаем старое окончание
-                lemma += replGroup[1] # Приклеиваем новое окончание
-                if self._IsDefined(lemma): # Проверим, что получившееся новое слово имеет право на существование, и если это так, то вернем его
-                    return lemma	
-        return None*/
     
 }

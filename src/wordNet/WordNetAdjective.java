@@ -1,37 +1,45 @@
 package wordNet;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *  Класс для работы с нормализацией прилагательных
+ * Класс для работы с нормализацией прилагательных
+ * Класс наследуется от BaseWordNetItem
  * @author RT
  */
 public class WordNetAdjective extends BaseWordNetItem {
     
-    public WordNetAdjective(String pathToWordNetDict) {
-        super(pathToWordNetDict);
+    /**
+     * Правила замены окончаний при нормализации слова по правилам. 
+     * К примеру, окончание "er" заменяется на "" или  "e" и тд.
+     */
+    private static final Map<String, String> mapRule = new HashMap<>();
+    static {
+        mapRule.put("er", "");
+        mapRule.put("er", "e");
+        mapRule.put("er", "e");
+        mapRule.put("est", "e");
+    }
+    private static final String EXC = "adj.exc";
+    private static final String INDEX = "index.adj";
+
+    @Override
+    protected Map<String, String> getMapRule() {
+        return mapRule;
     }
     
-    
-    /**
-     * # Класс для работы с нормализацией прилагательных
-# Класс наследуется от BaseWordNetItem
+    @Override
+    protected String getExc() {
+        return EXC;
+    }
 
-class WordNetAdjective(BaseWordNetItem):
-    def __init__(self, pathToWordNetDict):
-    
-        # Конструктор родителя (BaseWordNetItem)
-        BaseWordNetItem.__init__(self, pathToWordNetDict, 'adj.exc', 'index.adj')
+    @Override
+    protected String getIndex() {
+        return INDEX;
+    }
+        
+    // Метод получения нормализованной формы слова GetLemma(word) 
+    // определен в базовом классе BaseWordNetItem
 
-
-        # Правила замены окончаний при нормализации слова по правилам. К примеру, окончание "er" заменяется на "" или  "e" и тд.
-        self.rule = (	
-                        ["er"  , "" ],
-                        ["er"  , "e"],
-                        ["est" , "" ], 			
-                        ["est" , "e"]	
-                    )
-
-                        
-        # Метод получения нормализованной формы слова GetLemma(word) определен в базовом классе BaseWordNetItem
-
-     */
 }

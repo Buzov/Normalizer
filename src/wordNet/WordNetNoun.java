@@ -1,38 +1,55 @@
 package wordNet;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *
+ * Класс для работы с нормализацией существительных
+ * Класс наследуется от BaseWordNetItem
  * @author RT
  */
 public class WordNetNoun extends BaseWordNetItem {
+    
+    /**
+     * Правила замены окончаний при нормализации слова по правилам. 
+     * К примеру, окончание "s" заменяется на "", "ses" заменяется на "s" и тд.
+     */
+    private static final Map<String, String> mapRule = new HashMap<>();
+    static {
+        mapRule.put("s", "");
+        mapRule.put("’s", "");
+        mapRule.put("’", "");
+        mapRule.put("ses", "s");
+        mapRule.put("xes", "x");
+        mapRule.put("zes", "z");
+        mapRule.put("ches", "ch");
+        mapRule.put("shes", "sh");
+        mapRule.put("men", "man");
+        mapRule.put("ies", "y");
+    }
+    private static final String EXC = "noun.exc";
+    private static final String INDEX = "index.noun";
+    
+    @Override
+    protected Map<String, String> getMapRule() {
+        return mapRule;
+    }
+    
+    @Override
+    protected String getExc() {
+        return EXC;
+    }
 
-    public WordNetNoun(String pathToWordNetDict) {
-        super(pathToWordNetDict);
+    @Override
+    protected String getIndex() {
+        return INDEX;
     }
     
     /*
-    # Класс для работы с нормализацией существительных
-# Класс наследуется от BaseWordNetItem
 
-class WordNetNoun(BaseWordNetItem):
-    def __init__(self, pathToWordNetDict):
-    
-        # Конструктор родителя (BaseWordNetItem)
-        BaseWordNetItem.__init__(self, pathToWordNetDict, 'noun.exc', 'index.noun')
         
-        # Правила замены окончаний при нормализации слова по правилам. К примеру, окончание "s" заменяется на "", "ses" заменяется на "s" и тд.
-        self.rule = (	
-                        ["s"    , ""    ],
-                        ["’s"   , ""    ],
-                        ["’"    , ""    ],							
-                        ["ses"  , "s"   ],
-                        ["xes"  , "x"   ], 			
-                        ["zes"  , "z"   ],	
-                        ["ches" , "ch"  ], 			
-                        ["shes" , "sh"  ],
-                        ["men"  , "man" ], 			
-                        ["ies"  , "y"   ]					
-                    )	 
+        
+        
                     
                     
     # Метод возвращает лемму сушествительного(нормализованную форму слова)
