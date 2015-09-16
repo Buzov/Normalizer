@@ -39,7 +39,7 @@ public abstract class BaseWordNetItem {
      * Немного оптимизации. Кэш для уже нормализованных слов, 
      * ключ - ненормализованное слово, значение - нормализованное слово
      */
-    protected static Map<String, String> mapCash = new HashMap<>();
+    protected Map<String, String> mapCash = new HashMap<>();
     /**
      * Индексный массив	
      */

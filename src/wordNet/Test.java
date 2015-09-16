@@ -22,6 +22,13 @@ public class Test {
     
     public static void main(String[] args) {
         
+        String d = "powerful";
+        
+        if(d.endsWith("ful")) {
+            d = d.substring(0, d.length()-3);
+            System.out.println(d);
+        }
+        
         String[] mas = {"0266597", "002665974", "12345678"};
         for(String s : mas) {
             m = p.matcher(s);
