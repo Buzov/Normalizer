@@ -14,22 +14,31 @@ public class Lemmatizer {
     /**
      * Разделитель составных слов	
      */
-    private static final String splitter = "-"; 		
+    private static final String splitter = "-";
+    private boolean state = false;
     
-    private WordNetAdjective adj; 
-    private WordNetNoun noun;
-    private WordNetAdverb adverb;
-    private WordNetVerb verb;
+    private static WordNetAdjective adj = new WordNetAdjective(); // Прилагательные
+    private static WordNetNoun noun = new WordNetNoun(); // Существительные
+    private static WordNetAdverb adverb = new WordNetAdverb(); // Наречия
+    private static WordNetVerb verb = new WordNetVerb(); // Глаголы
     
-    private BaseWordNetItem[] wordNet = {adj, noun, adverb, verb};
+    private BaseWordNetItem[] wordNet = {adverb, adj, verb, noun};
            
     
     public Lemmatizer(String pathToWordNetDict) {
         // Инициализируем объекты с частям речи
-        adj = new WordNetAdjective(pathToWordNetDict);	// Прилагательные
-        noun = new WordNetNoun(pathToWordNetDict);	// Существительные
-        adverb = new WordNetAdverb(pathToWordNetDict);	// Наречия
-        verb = new WordNetVerb(pathToWordNetDict);      // Глаголы
+        boolean temp = true;
+        for(BaseWordNetItem bwni : wordNet) {
+            state = bwni.initialize(pathToWordNetDict);
+            if(!state) {
+                temp = state;
+            }
+        }
+        state = temp;
+    }
+    
+    public boolean isInit() {
+        return state;
     }
     
     /**

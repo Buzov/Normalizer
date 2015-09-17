@@ -24,10 +24,6 @@ public class WordNetAdverb extends BaseWordNetItem {
     // Метод получения нормализованной формы слова GetLemma(word) 
     // определен в базовом классе BaseWordNetItem
     
-    public WordNetAdverb(String pathToWordNetDict) {
-        //super(pathToWordNetDict);
-    }
-    
     @Override
     protected Map<String, String> getMapRule() {
         return mapRule;
