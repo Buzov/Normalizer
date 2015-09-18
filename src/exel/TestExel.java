@@ -33,6 +33,7 @@ public class TestExel {
         Workbook wb = new HSSFWorkbook(); // xls
         
         Sheet sheet1 = wb.createSheet("mySheet1");
+        // Set the width (in units of 1/256th of a character width)
         sheet1.setColumnWidth(1, 5000);
         sheet1.autoSizeColumn(0);
         sheet1.addMergedRegion(new CellRangeAddress(0, 4, 4, 8));
