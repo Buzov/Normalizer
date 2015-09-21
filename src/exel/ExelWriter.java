@@ -110,7 +110,8 @@ public class ExelWriter {
     }
 
     private CellStyle getCellStyle(Font font, Workbook workbook) {
-        if (cellstyle == null) {
+        CellStyle cellstyle = null;
+        /*if (cellstyle == null) {*/
             cellstyle = workbook.createCellStyle();
             cellstyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
             cellstyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
@@ -122,7 +123,7 @@ public class ExelWriter {
             if (font != null) {
                 cellstyle.setFont(font);
             }
-        }
+        /*}*/
         return cellstyle;
     }
 
@@ -141,7 +142,7 @@ public class ExelWriter {
     
     public static void main(String[] args) throws IOException {
         List<List<Object>> list = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 65000; i++) {
             List<Object> l = new ArrayList<>();
             for(int j = 0; j < 5; j++) {
                 l.add("" + i + j + "word"+ "abcdfgeklomprqzx");
