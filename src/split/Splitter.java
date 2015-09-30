@@ -33,7 +33,7 @@ public class Splitter {
     /**
      * Расширение файла
      */
-    private static final String EXP = ".srt";
+    private static final String[] EXP = {".txt", ".srt", ".rtf"};
     /**
      * Шаблон
      */
@@ -99,8 +99,11 @@ public class Splitter {
         for(File file : directory.listFiles()) {
             if(file.isFile()) {
                 String path = file.getPath();
-                if(path.endsWith(EXP)) {
-                    list.add(path);
+                for(String s : EXP) {
+                    if(path.endsWith(s)) {
+                        list.add(path);
+                        break;
+                    }
                 }
             }
         }
@@ -128,7 +131,7 @@ public class Splitter {
     
     public static void main(String[] args) {
         // ./books/
-        new Splitter().initialize("D:\\download\\Hellboy.Dilogy.(2004-2008).BDRip.720p.(DVD5).[NoLimits-Team]");
+        new Splitter().initialize("D:\\text");
     }
     
 }

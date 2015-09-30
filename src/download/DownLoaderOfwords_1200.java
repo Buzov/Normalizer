@@ -32,9 +32,9 @@ public class DownLoaderOfwords_1200 {
 "	UNWILLINGLY 0\n" +
 "	WILLED 0\n" +
 "WIN 0";
-    private static final String PATH_TO_FILE = "D:/1. Books/En/130000/130000.txt";
-    private static final String PATH_TO_FILE_MP3 = "D:/1. Books/En/130000/%s.mp3";
-    private static final String PATH_TO_LOG = "D:/1. Books/En/130000/130000_log.txt";
+    private static final String PATH_TO_FILE = "D:/1. Books/En/130000/z/z2.txt";
+    private static final String PATH_TO_FILE_MP3 = "D:/1. Books/En/130000/z/z2/%s.mp3";
+    private static final String PATH_TO_LOG = "D:/1. Books/En/130000/z/z2_log.txt";
     private static final String SPACE = " ";
 
     public static void main(String[] args) {
