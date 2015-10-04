@@ -1,4 +1,4 @@
-package split;
+package util.split;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,7 +45,7 @@ public class Splitter {
      * Шаблон
      */
     private static final String REGEX = "((?:[a-zA-Z]+[-']?)*[a-zA-Z]+)";
-    Pattern p = Pattern.compile(REGEX);
+    private static Pattern p = Pattern.compile(REGEX);
     Matcher m = null;
     private File directory = null;
     private static List<String> listPathToBooks = null;
@@ -139,7 +139,7 @@ public class Splitter {
 
     private List<String> splitt() throws UnsupportedEncodingException, FileNotFoundException, IOException {
         List<String> list = new ArrayList<>();
-
+        
         for (String path : listPathToBooks) {
 
             BufferedReader br = new BufferedReader(
@@ -160,9 +160,23 @@ public class Splitter {
         return list;
     }
 
-    public static void main(String[] args) {
-        // ./books/
-        new Splitter().initialize("/Users/artur/Desktop/Harry/");
+    private static List<String> splitt(String s) {
+        List<String> list = new ArrayList<>();
+        Matcher m = p.matcher(s);
+        while (m.find()) {
+            list.add(m.group().toLowerCase());
+        }
+        return list;
+    }
+    
+    private static List<String> splitt(String s, String regex) {
+        List<String> list = new ArrayList<>();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(s);
+        while (matcher.find()) {
+            list.add(matcher.group().toLowerCase());
+        }
+        return list;
     }
 
 }
