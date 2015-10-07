@@ -1,5 +1,8 @@
 package normalizer;
 
+import entity.Word;
+import exel.ExelType;
+import exel.ExelWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +27,7 @@ public class Normalizer {
     
     private static final String PATH_TO_SETTINGS = "./config/settings.ini";
 
-    private static Properties props = new Properties();
+    private static final Properties props = new Properties();
     private static String pathToBooks;
     private static String pathToWordNetDict;
     private static String pathToStarDict;
@@ -34,6 +37,9 @@ public class Normalizer {
     private static String[] listPathToStarDict = null;
     private static List<StartDict> listLanguageDict = new ArrayList<>();
     private static String[] listBooks = null;
+    
+    private static ExelWriter ew = new ExelWriter(ExelType.XLSX);
+    
     /**
      * @param args the command line arguments
      */
@@ -79,32 +85,36 @@ public class Normalizer {
     
     // Метод запускает задачу на выполнение
     private static void run() {
-        // Отдаем частотному словарю по одной книге	
-		/*for book in self.listBooks:
-			self.frequencyDict.ParseBook(book)	*/	
-			
-	// Получаем первые countWord слов из всего получившегося списка английских слов			
-		/*mostCommonElements = self.frequencyDict.FindMostCommonElements(self.countWord)
-		
-	// Получаем переводы для всех слов
-		for item in mostCommonElements:
-			word = item[0]
-			counterWord = item[1]
-			valueWord = getTranslate(word);
-			self.result.append([counterWord, word, valueWord])	*/
-
-	// Запишем результат в файл формата Excel 
-	saveResultToExcel();		
+        try {
+            // Отдаем частотному словарю по одной книге
+            /*for book in self.listBooks:
+            self.frequencyDict.ParseBook(book)	*/
+            
+            // Получаем первые countWord слов из всего получившегося списка английских слов
+            /*mostCommonElements = self.frequencyDict.FindMostCommonElements(self.countWord)
+            
+            // Получаем переводы для всех слов
+            for item in mostCommonElements:
+            word = item[0]
+            counterWord = item[1]
+            valueWord = getTranslate(word);
+            self.result.append([counterWord, word, valueWord])	*/
+            
+            // Запишем результат в файл формата Excel
+            saveResultToExcel(null);
+        } catch (IOException ex) {
+            Logger.getLogger(Normalizer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // Метод сохраняет результат(само слово, частота, его перевод) по первым countWord словам в файл формата Excel
-    private static void saveResultToExcel() {
-        
+    private static void saveResultToExcel(List<Word> list) throws IOException {
+        ew.write(null, pathToResult, COUNT_WORD);
     }
     
     // Метод бежит по всем словарям, и возвращает перевод из ближайшего словаря. 
     // Если перевода нет ни в одном из словарей, возвращается пустая строка
-    private static String  getTranslate() {
+    private static String  getTranslate(String wordEn) {
         return null;
     }
     

@@ -123,9 +123,9 @@ public class StartDict extends BaseStarDictItem {
         sex therapist pos = 28026616 size = 72
         sex therapy pos = 28026688 size = 113
         sex up pos = 28026801 size = 393
-     
+        pos = 36493747 size = 51
         */
         StartDict sd = new StartDict("./stardict", "");
-        System.out.println(sd.getTranslation(28026801, 393));
+        System.out.println(sd.getTranslation(28015689, 1660));
     }
 }
