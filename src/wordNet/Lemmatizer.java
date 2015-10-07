@@ -14,15 +14,15 @@ public class Lemmatizer {
     /**
      * Разделитель составных слов	
      */
-    private static final String splitter = "-";
+    private static final String SPLITTER = "-";
     private boolean state = false;
     
-    private static WordNetAdjective adj = new WordNetAdjective(); // Прилагательные
-    private static WordNetNoun noun = new WordNetNoun(); // Существительные
-    private static WordNetAdverb adverb = new WordNetAdverb(); // Наречия
-    private static WordNetVerb verb = new WordNetVerb(); // Глаголы
+    private static final WordNetAdjective adj = new WordNetAdjective(); // Прилагательные
+    private static final WordNetNoun noun = new WordNetNoun(); // Существительные
+    private static final WordNetAdverb adverb = new WordNetAdverb(); // Наречия
+    private static final WordNetVerb verb = new WordNetVerb(); // Глаголы
     
-    private BaseWordNetItem[] wordNet = {adverb, adj, verb, noun};
+    private final BaseWordNetItem[] wordNet = {adverb, adj, verb, noun};
            
     
     public Lemmatizer(String pathToWordNetDict) {
@@ -49,15 +49,15 @@ public class Lemmatizer {
     public String getLemma(String word) {
         // Если в слове есть тире, разделим слово на части, нормализуем 
         // каждую часть(каждое слово) по отдельности, а потом соединим
-        String[] words = word.split(splitter);
-        String lemma = null;
+        String[] words = word.split(SPLITTER);
+        String lemma;
         for(int i = 0; i < words.length; i++) {
             lemma = getLemmaWord(words[i]);
             if(lemma != null) {
                 words[i] = lemma;
             }
         }
-        return String.join(splitter, words);
+        return String.join(SPLITTER, words);
     }
     
     /**
@@ -74,6 +74,5 @@ public class Lemmatizer {
         }
         return null; 
     }
-    
-    
+   
 }

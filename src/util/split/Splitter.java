@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import static util.file.Lister.getFilesList;
 
 /**
  *
@@ -34,19 +35,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Splitter {
 
     /**
-     * Переменная с кодировкой
-     */
-    protected static final String ENCODING = "utf-8";
-    /**
      * Расширение файла
      */
     private static final String[] EXP = {".txt", ".srt"};
     /**
+     * Переменная с кодировкой
+     */
+    protected static final String ENCODING = "utf-8";
+    /**
      * Шаблон
      */
     private static final String REGEX = "((?:[a-zA-Z]+[-']?)*[a-zA-Z]+)";
-    private static Pattern p = Pattern.compile(REGEX);
-    Matcher m = null;
+    private static final Pattern p = Pattern.compile(REGEX);
+    private Matcher m = null;
     private File directory = null;
     private static List<String> listPathToBooks = null;
     private static List<String> listWords = null;
@@ -55,7 +56,9 @@ public class Splitter {
         return initialize(pathToBooks, ENCODING);
     }
 
-    public boolean initialize(String pathToBooks, String encoding) {
+    public List<String> initialize(String pathToBooks, String encoding) throws IOException {
+
+        List<File> list = getFilesList(pathToBooks, EXP);
 
         directory = new File(pathToBooks);
         if (!directory.exists() || !directory.isDirectory()) {
@@ -121,15 +124,18 @@ public class Splitter {
         return true;
     }
 
-    private List<String> getListPathToBooks() {
+    private List<String> splitt(String pathToBooks, String encoding, String[] exp) throws IOException {
         List<String> list = new ArrayList<>();
-        for (File file : directory.listFiles()) {
-            if (file.isFile()) {
-                String path = file.getPath();
-                for (String s : EXP) {
-                    if (path.endsWith(s)) {
-                        list.add(path);
-                        break;
+        List<File> listFiles = getFilesList(pathToBooks, exp);
+        for (File file : listFiles) {
+            try (FileInputStream fis = new FileInputStream(file);
+                    InputStreamReader isr = new InputStreamReader(fis, encoding);
+                    BufferedReader br = new BufferedReader(isr)) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    m = p.matcher(line);
+                    while (m.find()) {
+                        list.add(m.group().toLowerCase());
                     }
                 }
             }
@@ -137,40 +143,15 @@ public class Splitter {
         return list;
     }
 
-    private List<String> splitt() throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        List<String> list = new ArrayList<>();
-        
-        for (String path : listPathToBooks) {
-
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(new File(path)), ENCODING)
-            );
-            String line;
-
-            while ((line = br.readLine()) != null) {
-
-                m = p.matcher(line);
-                while (m.find()) {
-                    list.add(m.group().toLowerCase());
-                }
-            }
-            br.close();
-        }
-        return list;
+    private List<String> splitt(String pathToBooks) throws IOException {
+        return splitt(pathToBooks, ENCODING, EXP);
     }
 
-    private static List<String> splitt(String s) {
-        List<String> list = new ArrayList<>();
-        Matcher m = p.matcher(s);
-        while (m.find()) {
-            list.add(m.group().toLowerCase());
-        }
-        return list;
+    private static List<String> splittUtil(String s, List<String> list) {
+        return splittUtil(s, REGEX, list);
     }
-    
-    private static List<String> splitt(String s, String regex) {
-        List<String> list = new ArrayList<>();
+
+    private static List<String> splittUtil(String s, String regex, List<String> list) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(s);
         while (matcher.find()) {
@@ -178,6 +159,8 @@ public class Splitter {
         }
         return list;
     }
+   
+
 
 }
 

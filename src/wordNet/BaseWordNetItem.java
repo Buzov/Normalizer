@@ -110,7 +110,7 @@ public abstract class BaseWordNetItem {
         try (FileInputStream fis = new FileInputStream(file); 
              InputStreamReader is = new InputStreamReader(fis);   
              BufferedReader br = new BufferedReader(is)) {
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 parser.parse(line, map);
             }
@@ -126,10 +126,7 @@ public abstract class BaseWordNetItem {
      * @return 
      */
     protected boolean isDefined(String word){
-        if(mapDict.containsKey(word)) {
-            return true;
-        }
-        return false;
+        return mapDict.containsKey(word);
     }
     
     protected abstract Map<String, String> getMapRule();

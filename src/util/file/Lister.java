@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author RT
  */
-class Lister {
+public class Lister {
 
     /**
      * Расширение файла

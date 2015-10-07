@@ -38,8 +38,4 @@ public class WordNetAdjective extends BaseWordNetItem {
     protected String getIndex() {
         return INDEX;
     }
-        
-    // Метод получения нормализованной формы слова GetLemma(word) 
-    // определен в базовом классе BaseWordNetItem
-
 }
