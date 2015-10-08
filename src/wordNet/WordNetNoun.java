@@ -111,9 +111,9 @@ public class WordNetNoun extends BaseWordNetItem {
                 // Не забываем добавить суффикс "ful", если он был
             }
             mapCash.put(s, lemma);
-        } else {
+        } /*else {
             return s;
-        }
+        }*/
         
         return lemma;
     }  

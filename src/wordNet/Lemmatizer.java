@@ -55,6 +55,8 @@ public class Lemmatizer {
             lemma = getLemmaWord(words[i]);
             if(lemma != null) {
                 words[i] = lemma;
+            } else {
+                return null;
             }
         }
         return String.join(SPLITTER, words);
@@ -71,6 +73,7 @@ public class Lemmatizer {
             if(lemma != null) {
                 return lemma;
             }
+            // lemma = null;
         }
         return null; 
     }

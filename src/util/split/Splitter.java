@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static util.file.Lister.getFilesList;
@@ -37,51 +34,8 @@ public class Splitter {
     
 //    public List<String> initialize(String pathToBooks, String encoding) throws IOException {
 //
-//        List<File> list = getFilesList(pathToBooks, EXP);
-//        List<String> listWords = splitt();
-//
-//        ComparatorByValue cmp = new ComparatorByValue();
-//        Map<String, Integer> map = new HashMap<>();
-//        for (String s : listWords) {
-//            //System.out.println(s);
-//            if (map.containsKey(s)) {
-//                map.put(s, map.get(s) + 1);
-//            } else {
-//                map.put(s, 1);
-//            }
-//        }
-//        Set<Entry<String, Integer>> set = map.entrySet();
-//        List<Entry<String, Integer>> list = new ArrayList<>(set);
-//        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-//            @Override
-//            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-//                return (o2.getValue()).compareTo(o1.getValue());
-//            }
-//        });
-//        Workbook workbook = new XSSFWorkbook();
-//        Sheet sheet = workbook.createSheet(WorkbookUtil.createSafeSheetName("words"));
-//        int i = 0;
-//        for (Map.Entry<String, Integer> entry : list) {
-//            Row row = sheet.createRow(i);
-//            row.createCell(0).setCellValue(entry.getKey());
-//            row.createCell(1).setCellValue(entry.getValue().toString());
-//            System.out.println(entry.getKey() + " ==== " + entry.getValue());
-//            i++;
-//        }
-//        String path = "/Users/artur/Desktop/Harry/harry_words.xlsx";
-//
-//        try (FileOutputStream fs = new FileOutputStream(path)) {
-//            workbook.write(fs);
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        try {
-//            workbook.close();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
+
 //        /*for(Entry e : map.entrySet()) {
 //         System.out.println("word = " + e.getKey() + " count = " + e.getValue());
 //         }*/
@@ -188,18 +142,4 @@ public class Splitter {
         }
     }
 
-}
-
-class ComparatorByValue implements Comparator<Map.Entry<String, Integer>> {
-
-    @Override
-    public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
-        if (e1.getValue() < e2.getValue()) {
-            return 1;
-        } else if (Objects.equals(e1.getValue(), e2.getValue())) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
 }
