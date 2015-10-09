@@ -157,7 +157,7 @@ public class Normalizer {
             }
             String path = "./harry_words.xlsx";
 
-            try (FileOutputStream fs = new FileOutputStream(path)) {
+            try (FileOutputStream fs = new FileOutputStream(pathToResult)) {
                 workbook.write(fs);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Splitter.class.getName()).log(Level.SEVERE, null, ex);

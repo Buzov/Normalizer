@@ -22,7 +22,7 @@ public class Lemmatizer {
     private static final WordNetAdverb adverb = new WordNetAdverb(); // Наречия
     private static final WordNetVerb verb = new WordNetVerb(); // Глаголы
     
-    private final BaseWordNetItem[] wordNet = {adverb, adj, verb, noun};
+    private final BaseWordNetItem[] wordNet = {verb, adverb, adj, noun};
            
     
     public Lemmatizer(String pathToWordNetDict) {
