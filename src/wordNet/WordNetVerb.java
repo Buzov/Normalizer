@@ -1,7 +1,7 @@
 package wordNet;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для нормализации глаголов
@@ -14,23 +14,23 @@ public class WordNetVerb extends BaseWordNetItem {
      * Правила замены окончаний при нормализации слова по правилам. 
      * К примеру, окончание "s" заменяется на "" , "ies" на и "y" тд.
      */
-    private static final Map<String, String> mapRule = new HashMap<>();
+    private static final List<Rule> listRule = new ArrayList<>();
     static {
-        mapRule.put("s", "");
-        mapRule.put("ies" , "y");
-        mapRule.put("es", "e");
-        mapRule.put("es", "");
-        mapRule.put("ed", "e");
-        mapRule.put("ed", "");
-        mapRule.put("ing", "e");
-        mapRule.put("ing", "");	
+        listRule.add(new Rule("s", ""));
+        listRule.add(new Rule("ies" , "y"));
+        listRule.add(new Rule("es", "e"));
+        listRule.add(new Rule("es", ""));
+        listRule.add(new Rule("ed", "e"));
+        listRule.add(new Rule("ed", ""));
+        listRule.add(new Rule("ing", "e"));
+        listRule.add(new Rule("ing", ""));	
     }
     private static final String EXC = "verb.exc";
     private static final String INDEX = "index.verb";
 
     @Override
-    protected Map<String, String> getMapRule() {
-        return mapRule;
+    protected List<Rule> getListRule() {
+        return listRule;
     }
     
     @Override

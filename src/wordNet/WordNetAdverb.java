@@ -1,7 +1,7 @@
 package wordNet;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для нормалзации наречий
@@ -15,18 +15,16 @@ public class WordNetAdverb extends BaseWordNetItem {
      * У наречий есть только списки исключений(adv.exc) и итоговый список слов(index.adv).	
      * Правила замены окончаний при нормализации слова по правилам у наречий нет. 
      */
-    private static final Map<String, String> mapRule = new HashMap<>();
+    private static final List<Rule> listRule = new ArrayList<>();
     private static final String EXC = "adv.exc";
     private static final String INDEX = "index.adv";
-
-
         
     // Метод получения нормализованной формы слова GetLemma(word) 
     // определен в базовом классе BaseWordNetItem
     
     @Override
-    protected Map<String, String> getMapRule() {
-        return mapRule;
+    protected List<Rule> getListRule() {
+        return listRule;
     }
     
     @Override

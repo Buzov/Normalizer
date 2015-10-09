@@ -1,7 +1,7 @@
 package wordNet;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для работы с нормализацией существительных
@@ -16,25 +16,25 @@ public class WordNetNoun extends BaseWordNetItem {
      * Правила замены окончаний при нормализации слова по правилам. 
      * К примеру, окончание "s" заменяется на "", "ses" заменяется на "s" и тд.
      */
-    private static final Map<String, String> mapRule = new HashMap<>();
+    private static final List<Rule> listRule = new ArrayList<>();
     static {
-        mapRule.put("s", "");
-        mapRule.put("’s", "");
-        mapRule.put("’", "");
-        mapRule.put("ses", "s");
-        mapRule.put("xes", "x");
-        mapRule.put("zes", "z");
-        mapRule.put("ches", "ch");
-        mapRule.put("shes", "sh");
-        mapRule.put("men", "man");
-        mapRule.put("ies", "y");
+        listRule.add(new Rule("s", ""));
+        listRule.add(new Rule("’s", ""));
+        listRule.add(new Rule("’", ""));
+        listRule.add(new Rule("ses", "s"));
+        listRule.add(new Rule("xes", "x"));
+        listRule.add(new Rule("zes", "z"));
+        listRule.add(new Rule("ches", "ch"));
+        listRule.add(new Rule("shes", "sh"));
+        listRule.add(new Rule("men", "man"));
+        listRule.add(new Rule("ies", "y"));
     }
     private static final String EXC = "noun.exc";
     private static final String INDEX = "index.noun";
     
     @Override
-    protected Map<String, String> getMapRule() {
-        return mapRule;
+    protected List<Rule> getListRule() {
+        return listRule;
     }
     
     @Override
@@ -55,6 +55,7 @@ public class WordNetNoun extends BaseWordNetItem {
      * @param word
      * @return 
      */
+    @Override
     public String getLemma(String word) {
         String s = word.toLowerCase();
         String lemma = null;

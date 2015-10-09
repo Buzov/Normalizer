@@ -1,7 +1,7 @@
 package wordNet;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для работы с нормализацией прилагательных
@@ -14,19 +14,19 @@ public class WordNetAdjective extends BaseWordNetItem {
      * Правила замены окончаний при нормализации слова по правилам. 
      * К примеру, окончание "er" заменяется на "" или  "e" и тд.
      */
-    private static final Map<String, String> mapRule = new HashMap<>();
+    private static final List<Rule> listRule = new ArrayList<>();
     static {
-        mapRule.put("er", "");
-        mapRule.put("er", "e");
-        mapRule.put("er", "e");
-        mapRule.put("est", "e");
+        listRule.add(new Rule("er", ""));
+        listRule.add(new Rule("er", "e"));
+        listRule.add(new Rule("er", "e"));
+        listRule.add(new Rule("est", "e"));
     }
     private static final String EXC = "adj.exc";
     private static final String INDEX = "index.adj";
 
     @Override
-    protected Map<String, String> getMapRule() {
-        return mapRule;
+    protected List<Rule> getListRule() {
+        return listRule;
     }
     
     @Override

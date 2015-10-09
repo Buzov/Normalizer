@@ -21,7 +21,7 @@ public class Splitter {
     /**
      * Расширение файла
      */
-    private static final String[] EXP = {".txt", ".srt"};
+    private static final String[] EXP = {".txt", ".srt", ".fb2"};
     /**
      * Переменная с кодировкой
      */

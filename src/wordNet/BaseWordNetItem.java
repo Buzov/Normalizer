@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -129,7 +130,7 @@ public abstract class BaseWordNetItem {
         return mapDict.containsKey(word);
     }
     
-    protected abstract Map<String, String> getMapRule();
+    protected abstract List<Rule> getListRule();
     
     protected abstract String getExc();
     
@@ -178,14 +179,14 @@ public abstract class BaseWordNetItem {
      * @return 
      */
     public String ruleNormalization(String word) {
-        Map<String, String> mapRule = getMapRule();
+        List<Rule> listRule = getListRule();
         // Бежим по всем правилам, смотрим совпадает ли окончание слова с 
         // каким либо правилом, если совпадает, то заменяем окончние.
-        for(Map.Entry<String, String> e : mapRule.entrySet()) {
-            if(word.endsWith(e.getKey())) {
-                int pos = word.lastIndexOf(e.getKey());
+        for(Rule rule : listRule) {
+            if(word.endsWith(rule.getKey())) {
+                int pos = word.lastIndexOf(rule.getKey());
                 String lemma = word.substring(0, pos); // Отрезаем старое окончание
-                lemma = lemma + e.getValue(); // Приклеиваем новое окончание
+                lemma = lemma + rule.getValue(); // Приклеиваем новое окончание
                 //System.out.println("lemma = " + lemma);
                 if(isDefined(lemma)) {
                     return lemma;

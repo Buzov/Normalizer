@@ -20,7 +20,7 @@ public class Lister {
     /**
      * Расширение файла
      */
-    private static final String[] EXP = {".txt", ".srt"};
+    private static final String[] EXP = {".txt", ".srt", ".fb2"};
     public static final String[] EXP_FOR_ALL = {""};
 
     public static void print(List<File> files) {

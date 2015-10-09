@@ -155,7 +155,6 @@ public class Normalizer {
                 System.out.println(entry.getKey() + " ==== " + entry.getValue());
                 i++;
             }
-            String path = "./harry_words.xlsx";
 
             try (FileOutputStream fs = new FileOutputStream(pathToResult)) {
                 workbook.write(fs);
@@ -185,6 +184,7 @@ public class Normalizer {
             // Запишем результат в файл формата Excel
             saveResultToExcel(null);
         } catch (IOException ex) {
+            System.out.println("dfgdgfdgdfgdfgdg");
             Logger.getLogger(Normalizer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -7,7 +7,7 @@ package wordNet;
 public class TestLemma {
 
     public static void main(String[] args) {
-        String[] mas = {"asdadadadadadadasd", "are", "were", "has", "draws", "runs", "came", "have", "broken", "I", "You", "dogs", "powersful", "drivers", "men", "women", "women-have", "not", "looking", "balancing"};
+        String[] mas = {"turned", "upturned", "used", "looking", "balancing", "asdadadadadadadasd", "are", "were", "has", "draws", "runs", "came", "have", "broken", "I", "You", "dogs", "powersful", "drivers", "men", "women", "women-have", "not"};
         Lemmatizer l = new Lemmatizer("./wordnet/dict/");
 
         if (l.isInit()) {
